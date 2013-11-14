@@ -14,7 +14,10 @@ class ExpressAuthorizeRequest extends AbstractRequest
         $this->validate('amount', 'returnUrl', 'cancelUrl');
 
         $data['PAYMENTREQUEST_0_PAYMENTACTION'] = 'Authorization';
+        $data['PAYMENTREQUEST_0_TAXAMT'] = $this->getTax();
+        $data['PAYMENTREQUEST_0_SHIPPINGAMT'] = $this->getShipping();
         $data['PAYMENTREQUEST_0_AMT'] = $this->getAmount();
+        $data['PAYMENTREQUEST_0_ITEMAMT'] = $this->getAmount() - $this->getTax() - $this->getShipping();
         $data['PAYMENTREQUEST_0_CURRENCYCODE'] = $this->getCurrency();
         $data['PAYMENTREQUEST_0_INVNUM'] = $this->getTransactionId();
         $data['PAYMENTREQUEST_0_DESC'] = $this->getDescription();
@@ -53,10 +56,12 @@ class ExpressAuthorizeRequest extends AbstractRequest
         $items = $this->getItems();
         if ($items) {
             foreach ($items as $n => $item) {
+                $data["L_PAYMENTREQUEST_0_NUMBER$n"] = $item->getId();
                 $data["L_PAYMENTREQUEST_0_NAME$n"] = $item->getName();
                 $data["L_PAYMENTREQUEST_0_DESC$n"] = $item->getDescription();
                 $data["L_PAYMENTREQUEST_0_QTY$n"] = $item->getQuantity();
                 $data["L_PAYMENTREQUEST_0_AMT$n"] = $this->formatCurrency($item->getPrice());
+                $data["L_PAYMENTREQUEST_0_TAXAMT$n"] = $this->formatCurrency($item->getTax());
             }
         }
 

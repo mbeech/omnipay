@@ -186,6 +186,32 @@ abstract class AbstractRequest implements RequestInterface
         return (int) round($this->getAmount() * $this->getCurrencyDecimalFactor());
     }
 
+    public function getTax()
+    {
+        $tax = $this->getParameter('tax');
+        if ($tax) {
+            return $this->formatCurrency($tax);
+        }
+    }
+
+    public function setTax($value)
+    {
+        return $this->setParameter('tax', $value);
+    }
+
+    public function getShipping()
+    {
+        $shipping = $this->getParameter('shipping');
+        if ($shipping) {
+            return $this->formatCurrency($shipping);
+        }
+    }
+
+    public function setShipping($value)
+    {
+        return $this->setParameter('shipping', $value);
+    }
+
     public function getCurrency()
     {
         return $this->getParameter('currency');
