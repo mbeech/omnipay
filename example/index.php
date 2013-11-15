@@ -136,8 +136,13 @@ $app->get('/gateways/{name}/purchase', function($name) use ($app) {
     $gateway->initialize((array) $app['session']->get($sessionVar));
 
     $params = $app['session']->get($sessionVar.'.purchase', array());
+
     $params['returnUrl'] = str_replace('/purchase', '/completePurchase', $app['request']->getUri());
     $params['cancelUrl'] = $app['request']->getUri();
+    
+
+   
+
     $card = new Omnipay\Common\CreditCard($app['session']->get($sessionVar.'.card'));
 
     return $app['twig']->render('request.twig', array(
@@ -157,6 +162,25 @@ $app->post('/gateways/{name}/purchase', function($name) use ($app) {
     // load POST data
     $params = $app['request']->get('params');
     $card = $app['request']->get('card');
+    $items = new Omnipay\Common\ItemBag;
+    $items->add(array(
+        'id' => 'ABC123',
+        'name' => 'Food',
+        'quantity' => 1,
+        'price' => '1.00',
+        'tax' => '2.00',
+    ));
+/*
+     $items->add(array(
+        'id' => 'ZZZ1234',
+        'name' => 'Food2',
+        'quantity' => 1,
+        'price' => '1.00',
+        'tax' => '1.00',
+    ));
+*/
+    $params['tax'] = "2.00";
+    $params['shipping'] = "1.00";
 
     // save POST data into session
     $app['session']->set($sessionVar.'.purchase', $params);
@@ -164,6 +188,13 @@ $app->post('/gateways/{name}/purchase', function($name) use ($app) {
 
     $params['card'] = $card;
     $params['clientIp'] = $app['request']->getClientIp();
+    //$params['lowProfile'] = true;
+    $params['items'] = $items;
+
+/*
+    print_r($params);
+    die();
+*/
     $response = $gateway->purchase($params)->send();
 
     return $app['twig']->render('response.twig', array(

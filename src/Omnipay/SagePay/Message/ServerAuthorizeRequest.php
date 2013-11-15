@@ -21,8 +21,7 @@ class ServerAuthorizeRequest extends DirectAuthorizeRequest
         $items = $this->getItems();
 
         if ($items) {
-
-            $data['Basket'] = count($items);
+            $i = count($items);
             foreach ($items as $n => $item) {
 
                 $data['Basket'] .= ':' . $item->getId()." - ".$item->getName();
@@ -32,8 +31,20 @@ class ServerAuthorizeRequest extends DirectAuthorizeRequest
                 $data['Basket'] .= ':' . $this->formatCurrency($item->getPrice() + $item->getTax());
                 $data['Basket'] .= ':' . $this->formatCurrency($item->getQuantity() * ($item->getPrice() + $item->getTax()));
             }
-            
         }
+
+        if($this->getShipping())
+        {
+            $i++;
+            $data['Basket'] .= ':' . 'Delivery';
+            $data['Basket'] .= ':' . '1';
+            $data['Basket'] .= ':' . $this->getShipping();
+            $data['Basket'] .= ':' . '---';
+            $data['Basket'] .= ':' . $this->getShipping();
+            $data['Basket'] .= ':' . $this->getShipping();
+        }
+
+        if(isset($data['Basket'])) $data['Basket'] = $i.$data['Basket'];
 
         return $data;
     }
