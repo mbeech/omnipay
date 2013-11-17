@@ -22,6 +22,7 @@ class ServerAuthorizeRequest extends DirectAuthorizeRequest
 
         if ($items) {
             $i = count($items);
+            $data['Basket'] = "";
             foreach ($items as $n => $item) {
 
                 $data['Basket'] .= ':' . $item->getId()." - ".$item->getName();
