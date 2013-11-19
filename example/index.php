@@ -162,6 +162,7 @@ $app->post('/gateways/{name}/purchase', function($name) use ($app) {
     // load POST data
     $params = $app['request']->get('params');
     $card = $app['request']->get('card');
+  /* 
     $items = new Omnipay\Common\ItemBag;
     $items->add(array(
         'id' => 'ABC123',
@@ -171,6 +172,7 @@ $app->post('/gateways/{name}/purchase', function($name) use ($app) {
         'tax' => '2.00',
     ));
 /*
+
      $items->add(array(
         'id' => 'ZZZ1234',
         'name' => 'Food2',
@@ -178,10 +180,10 @@ $app->post('/gateways/{name}/purchase', function($name) use ($app) {
         'price' => '1.00',
         'tax' => '1.00',
     ));
-*/
+
     $params['tax'] = "2.00";
     $params['shipping'] = "1.00";
-
+*/
     // save POST data into session
     $app['session']->set($sessionVar.'.purchase', $params);
     $app['session']->set($sessionVar.'.card', $card);
@@ -189,7 +191,7 @@ $app->post('/gateways/{name}/purchase', function($name) use ($app) {
     $params['card'] = $card;
     $params['clientIp'] = $app['request']->getClientIp();
     //$params['lowProfile'] = true;
-    $params['items'] = $items;
+    //$params['items'] = $items;
 
 /*
     print_r($params);
