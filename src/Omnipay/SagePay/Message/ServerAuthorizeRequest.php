@@ -15,16 +15,17 @@ class ServerAuthorizeRequest extends DirectAuthorizeRequest
         $data['NotificationURL'] = $this->getReturnUrl();
 
         //if (null !== $this->getLowProfile()) {
-        //    $data['Profile'] = "LOW";
+        $data['Profile'] = "LOW";
         //}
 
         $items = $this->getItems();
 
-        if ($items) {
+        if ($items)
+        {
             $i = count($items);
             $data['Basket'] = "";
-            foreach ($items as $n => $item) {
-
+            foreach ($items as $n => $item)
+            {
                 $data['Basket'] .= ':' . $item->getId()." - ".$item->getName();
                 $data['Basket'] .= ':' . $item->getQuantity();
                 $data['Basket'] .= ':' . $this->formatCurrency($item->getPrice());
